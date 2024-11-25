@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <filesystem>
 
 void hdl(int sig)
 {
@@ -93,6 +94,20 @@ printf("It is NOT a load disk!\n");
 }
 
 else if(strcmp(str, "\\cron") == 0){
+char str2[100];
+scanf("%s", str2);
+fprintf(f, "%s", str2);
+
+bool crdir = create_directory("/tmp/vfs");
+if (crdir){
+mount("/tmp/vfs", str2, "ext2", 0, NULL);
+printf("VFS successfully created!\n");
+}
+else {
+printf("Unable to create filder vfs\n");
+}
+//mount(
+
 printf("This is #11 WTF!\n");
 }
 
