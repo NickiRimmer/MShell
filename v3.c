@@ -90,7 +90,7 @@ printf("It is NOT a load disk!\n");
 }
 
 //printf("%d %d\n", buffer[510], buffer[511]);
-//printf("This is #10 WTF\n");
+//printf("This is #10!\n");
 }
 
 else if(strcmp(str, "\\cron") == 0){
@@ -108,11 +108,11 @@ printf("Unable to create filder vfs\n");
 }
 //mount(
 
-printf("This is #11 WTF!\n");
+printf("This is #11!\n");
 }
 
 else if(strcmp(str, "\\mem") == 0){
-printf("This is #12 WTF!\n");
+printf("This is #12!\n");
 }
 
 else {
