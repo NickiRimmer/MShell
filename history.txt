@@ -1,0 +1,41 @@
+s
+echo a
+\e USER
+\e PATH
+\e BIN
+\cron/hone/nick/dhl/vvfs
+\q
+\cron/home/nick/dhl/vvfs
+exit
+\cron/home/nick/dhl/vvfs
+\cron/home/nick/dhl/vvfs
+exit
+\cron/home/nick/dhl/vvfs
+exit
+\cron/home/nick/dhl/vvfs
+\cron/home/nick/img
+/cron
+/dev/sda
+\cron/dev/sda
+exit
+\cron/home/nick/img
+\cron/home/nick/img
+\cron/home/nick/img
+\cron/dev/loop0
+
+\cron/dev/loop0
+\cron/dev/loop0
+\cron/dev/loop0
+/bin/ls
+/bin/exbinfile
+whoami
+echo HELLO
+ag
+\e PATH
+\e USER
+/bin/exbinfile
+/bin/ls
+\l /dev/sda
+\l /dev/sda1
+\cron/dev/loop0
+exit

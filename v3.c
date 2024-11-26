@@ -6,16 +6,21 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-#include <filesystem>
+#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <sys/wait.h>
 
 void hdl(int sig)
 {
 printf("Config reload");
 }
 
+
 int main()
 {
-
+//self-handler for SIGHUP signal
 struct sigaction act;
 memset(&act, 0, sizeof(act));
 act.sa_handler = hdl;
@@ -25,6 +30,7 @@ sigaddset(&set, SIGHUP);
 act.sa_mask = set;
 sigaction(SIGHUP, &act, 0);
 
+//start of programm
 int pi = getpid();
 
 printf("Hello world!\nMy PID is: %d\n", pi);
@@ -36,13 +42,14 @@ printf("$ ");
 while((scanf("%s", str)) != -1)
 {
 fprintf(f, "%s", str);
-//printf("%s\n", strncpy(ssssss, str, 4));
 
+//exit func
 if (strcmp(str, "exit") == 0 || strcmp(str, "\\q") == 0){
 fprintf(f, "\n");
 break;
 }
 
+//echo func
 else if (strcmp(str, "echo") == 0){
 char str2[100];
 scanf("%s", str2);
@@ -50,6 +57,7 @@ fprintf(f, " %s", str2);
 printf("%s\n", str2);
 }
 
+//env var \e func
 else if (strcmp(str, "\\e") == 0){
 char str2[100];
 scanf("%s", str2);
@@ -58,12 +66,22 @@ char* eeee = getenv(str2);
 printf("%s\n", (eeee==NULL ? "NULL" : eeee));
 }
 
+//bin exp func
 else if (strstr(str, "/bin")!=NULL && strstr(str, "/bin")-str==0){
-//else if (strlen(str)>4 && strcmp({str[0], str[1], str[2], str[3]}, "/bin")){
-system(str);
-printf("\n");
+
+int fork_pi = fork();
+if (fork_pi < 0){
+printf("Something goes wrong...");
+}
+else if (fork_pi == 0) {
+execl(str, str, NULL);
+}
+else {
+waitpid(fork_pi, NULL, 0);
+}
 }
 
+//chech if disk is load
 else if(strcmp(str, "\\l") == 0){
 
 char disk[100];
@@ -89,30 +107,52 @@ else {
 printf("It is NOT a load disk!\n");
 }
 
-//printf("%d %d\n", buffer[510], buffer[511]);
-//printf("This is #10!\n");
 }
 
+//VFS mount and cron adder func
 else if(strcmp(str, "\\cron") == 0){
 char str2[100];
 scanf("%s", str2);
 fprintf(f, "%s", str2);
 
-bool crdir = create_directory("/tmp/vfs");
-if (crdir){
-mount("/tmp/vfs", str2, "ext2", 0, NULL);
+struct stat st = {0};
+int drcr = stat("/tmp/vfs", &st);
+//printf("%d\n", drcr);
+if (drcr == -1){
+mkdir("/tmp/vfs", 0777);
+}
+
+drcr = stat("/tmp/vfs", &st);
+//printf("%d\n", drcr);
+if (drcr==0){
+
+int ismounted = mount(str2, "/tmp/vfs", "ext2", 0, NULL);
+if (ismounted == 0){
 printf("VFS successfully created!\n");
+
+drcr = stat("/tmp/vfs/etc", &st);
+if (drcr == -1){
+mkdir("/tmp/vfs/etc", 0777);
+}
+
+FILE *crn = fopen("/tmp/vfs/etc/crontab", "a");
+fprintf(crn, "0 0 * * 3 root echo Hello!");
+fclose(crn);
 }
 else {
-printf("Unable to create filder vfs\n");
+printf("Error occured: %s, %d\n", strerror(errno), errno);
 }
-//mount(
 
-printf("This is #11!\n");
+}
+else {
+printf("Unable to create/search folder \"/tmp/vfs/\"\n");
+}
+
+//printf("This is #11!\n");
 }
 
 else if(strcmp(str, "\\mem") == 0){
-printf("This is #12!\n");
+printf("This is #12! (would be made sometimes)\n");
 }
 
 else {
